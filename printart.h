@@ -1,0 +1,1 @@
+void aocday(int n);

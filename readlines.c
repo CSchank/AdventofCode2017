@@ -3,11 +3,11 @@
 #include <string.h>
 
 char **readlines(char *file, unsigned long *n_lines){
-	size_t alloced = 128;
+	size_t alloced = 32;
 	char *p = malloc(alloced);
 	size_t to_read = alloced;
-	size_t nlines = 1;
-	char **lines = malloc(nlines*sizeof(char*));
+	*n_lines = 1;
+	char **lines = malloc(sizeof(char*));
 
 
 	FILE *fp = fopen(file, "r");
@@ -25,17 +25,15 @@ char **readlines(char *file, unsigned long *n_lines){
 			p = realloc(p, alloced);
 			to_read = alloced;
 	    } else {
-	    	char *newl = malloc(strlen(p));
+	    	char *newl = malloc(strlen(p) + 1);
 			strcpy (newl,p);
-			*(lines+(nlines-1)) = newl;
-
+			*(lines+(*n_lines-1)) = newl;
 			//allocate an extra line
-			nlines++;
-			lines = realloc(lines, nlines*sizeof(char*));
+			(*n_lines)++;
+			lines = realloc(lines, *n_lines*sizeof(char*));
 	    }
 	}
-
-	*n_lines = nlines - 1;
+	(*n_lines)--;
 	free(p);
 
 	return lines;
